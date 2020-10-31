@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>渣书网</title>
+    <link rel="icon" href="/src/static/icon/timg.jpg" type="image/x-icon"/>
+</head>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+<style>
+
+    html, body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, table, td, th, img, div, dl, dt, dd, input, select, form, fieldset {
+        margin: auto;
+        padding: 0;
+    }
+
+    body {
+        background-color: #E9FAFF;
+        color: #555;
+        font-family: ËÎÌå;
+        font-size: 12px;
+        margin: 0 auto;
+    }
+
+    #maininfo {
+        float: right;
+        width: 800px;
+    }
+    #info {
+        padding: 10px;
+        margin: 10px;
+        font-size: 15px;
+    }
+    #intro {
+        width: 96%;
+        overflow: hidden;
+        line-height: 150%;
+        border-top: 1px dashed #E0E0E0;
+        padding: 10px;
+        font-size: 13px;
+    }
+    #sidebar {
+        float: left;
+        width: 140px;
+        text-align: left;
+    }
+    #fmimg {
+        background-color: #E1ECED;
+        float: left;
+        width: 126px;
+        margin: 12px;
+        padding: 12px;
+        position: relative;
+    }
+
+    .box_con {
+        border: 2px solid #E0E0E0;
+        overflow: hidden;
+        width: 976px;
+        margin: 5px auto;
+    }
+
+    #list {
+        padding: 2px;
+    }
+    #list dl {
+        float: left;
+        overflow: hidden;
+        padding-bottom: 1px;
+        margin: auto;
+    }
+    #list dt {
+        background: none repeat scroll 0 0 #e5e5e5;
+        display: inline;
+        float: left;
+        font-size: 14px;
+        line-height: 28px;
+        overflow: hidden;
+        text-align: center;
+        vertical-align: middle;
+        width: 98%;
+        margin: auto auto 5px;
+        padding: 5px 10px;
+    }
+    #list dd {
+        border-bottom: 1px dashed #CCC;
+        display: inline;
+        float: left;
+        height: 25px;
+        line-height: 200%;
+        margin-bottom: 5px;
+        overflow: hidden;
+        text-align: left;
+        text-indent: 10px;
+        vertical-align: middle;
+        width: 33%;
+    }
+    #list dd a:link {
+        color: #444;
+    }
+    b {
+        font-weight: bold;
+    }
+    #listtj {
+        width: 960px;
+        padding: 5px;
+        float: left;
+    }
+    /*#app {*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        /*display: flex;*/
+        /*flex-direction: column;*/
+        /*background-color: #E9FAFF;*/
+        /*overflow: hidden;*/
+        /*align-items: center;*/
+        /*box-sizing: border-box;*/
+        /*padding: 4% 0;*/
+        /*overflow-y: scroll;*/
+    /*}*/
+
+
+</style>
+
+<body>
+<div id="app">
+
+
+    <div class="box_con">
+        <div id="maininfo">
+            <div id="info">
+                <h1  th:text="${data.data.book.name}">凡之帝</h1>
+                <p  th:text="${data.data.book.author}">作&nbsp;&nbsp;&nbsp;&nbsp;者：暗夜寂灭</p>
+                <p>最后更新：2020-01-01 10:17:24</p>
+                <p>最新章节： <a href="18831190.html" title="第六十一章福利”鬼屋直播！陆泽宇之殇！">第六十一章福利”鬼屋直播！陆泽宇之殇！</a></p>
+            </div>
+            <div id="intro">
+                <p  th:text="${data.data.book.introduction}">&nbsp;&nbsp;&nbsp;&nbsp;“没有谁生来就是弱者，没有人生来就是强者，以凡人之资，亦可撼动星宇凡，可平凡，可闪耀。”简铭凡帝厉凡之语。<br></p>
+            </div>
+        </div>
+        <div id="sidebar">
+            <div id="fmimg">
+                <img alt="凡之帝" src="/files/article/image/35/35149/35149s.jpg" onerror="src='http://www.qbiqu.com/images/nocover.jpg'">
+                <span class="b"></span>
+            </div>
+        </div>
+        <div id="listtj">
+            <button onclick="downTxt()">点击下载</button>
+        </div>
+    </div>
+
+    <div class="box_con" >
+        <div id="list">
+            <dl >
+                <dt th:text="'《'+${data.data.book.name}+'》正文'">《凡之帝》正文</dt>
+
+
+                <dd th:each="chapter :${data.data.chapters}"><a href="/chapter/content(chapterId=${chapter.id})" th:href="@{/chapter/content(chapterId=${chapter.id})}" th:text="${chapter.name}">第一章人生若只如初见</a></dd>
+
+
+            </dl>
+        </div>
+    </div>
+
+</div>
+<!--  width:auto; / width:XX%; -->
+<script src="/src/js/vue.js"></script>
+
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script src="/src/js/jquery-2.1.4.min.js"></script>
+
+<script th:inline="javascript" >
+    var bookId = [[${data.data.book.id}]];
+   function downTxt(){
+       window.open("/book/downTxt?bookId="+bookId);
+   }
+</script>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData: [
+                    {
+                        id: '1',
+                        ranking: "",
+                        name: '牧神记',
+                        author: '宅猪',
+                        introduction: '',
+                        type: ''
+                    }
+                ],
+                restaurants: [],
+                state: '',
+                timeout: null,
+                // 搜索框和推荐列表是否显示
+                mainShow: true,
+                //是否点过搜索按钮
+                searchFlag: false,
+                // 详情页是否展示
+                detailShow: false,
+                detailContet: "",
+                ChapterName: ""
+            }
+
+        },
+        methods: {}
+    });
+</script>
+</body>
+
+</html>

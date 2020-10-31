@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <contextName>${HOSTNAME}</contextName>
+
+    <!-- 日志输出格式 -->
+    <property name="encoding" value="UTF-8" />
+    <property name="normal-pattern" value="%date %level [%thread] %logger [%file : %line] %msg%n" />
+    <property name="plain-pattern" value="%d{yyyy-MM-dd.HH:mm:ss} %msg%n" />
+
+    <!-- console appender, use to debug -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+    </appender>
+
+    <!-- log file default -->
+    <appender name="fileDefault" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <Append>true</Append>
+        <encoder>
+            <pattern>${normal-pattern}</pattern>
+            <charset>${encoding}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/opt/logs/top.book/biz.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+     <logger name="org" level="WARN" />
+
+    <root level="INFO">
+		<!-- 输出到文件 -->
+        <appender-ref ref="fileDefault"/>
+		<!-- 输出到控制台 -->
+        <appender-ref ref="stdout"/>
+    </root>
+</configuration>

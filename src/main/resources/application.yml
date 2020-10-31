@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: prod
+#mybatis 配置
+logging:
+  config: classpath:log/logback-spring.xml
+
+#server:
+#  port: 80 #服务端口
+server:
+  port: 443 #服务端口
+  ssl:
+    key-store: classpath:3285946_www.ichenhao.top.pfx
+    key-store-password: SfYUFEeL
+    key-store-type: PKCS12

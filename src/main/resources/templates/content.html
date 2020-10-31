@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>渣书网</title>
+    <link rel="icon" href="/src/static/icon/timg.jpg" type="image/x-icon"/>
+</head>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+<style>
+
+    html, body, ul, ol, li, p, h1, h2, h3, h4, h5, h6, table, td, th, img, div, dl, dt, dd, input, select, form, fieldset {
+        margin: auto;
+        padding: 0px;
+    }
+
+    body {
+        background-color: rgb(233, 250, 255);
+        color: rgb(85, 85, 85);
+        font-family: ËÎÌå;
+        font-size: 12px;
+        margin: 0px auto;
+    }
+    .box_con {
+        width: 976px;
+        border-width: 2px;
+        border-style: solid;
+        border-color: rgb(136, 198, 229);
+        border-image: initial;
+        overflow: hidden;
+        margin: 5px auto;
+    }
+    .bookname {
+        line-height: 30px;
+        padding-top: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed rgb(136, 198, 229);
+    }
+    .bottem1 {
+        text-align: center;
+        width: 900px;
+        clear: both !important;
+        margin: 5px;
+    }
+    .bottem2 {
+        text-align: center;
+        width: 900px;
+        clear: both !important;
+        border-top: 1px dashed rgb(136, 198, 229);
+        margin: auto 20px;
+        padding: 15px;
+    }
+    .bottem a, .bottem1 a, .bottem2 a {
+        color: rgb(8, 83, 8);
+        font-size: 14px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .bookname h1 {
+        padding-top: 10px;
+        text-align: center;
+        font: 25px / 35px ºÚÌå;
+    }
+
+    .box_con #detcontent, .box_con #content div, .box_con #detcontent a {
+        font-family: ·½ÕýÆôÌå¼òÌå, "Microsoft YaHei", Î¢ÈíÑÅºÚ, ËÎÌå;
+        font-size: 19pt;
+        letter-spacing: 0.2em;
+        line-height: 150%;
+        padding-top: 15px;
+        width: 85%;
+        margin: auto;
+    }
+
+
+</style>
+
+<body>
+<div id="app">
+
+    <div class="content_read" style="">
+        <div class="box_con" style="">
+            <div class="bookname" style="">
+                <h1 th:text="${data.data.chapter.name}"> 第一章人生若只如初见</h1>
+                <div class="bottem1" style="">
+                    <a href="javascript:;" onclick="showpop('/modules/article/uservote.php?id=35149&amp;ajax_request=1');" style="">投推荐票</a> <a href="/35_35149/" style="">上一章</a> ← <a href="http://www.qbiqu.com/35_35149/" style="">章节目录</a> → <a href="/35_35149/18831131.html" style="">下一章</a> <a href="javascript:;" onclick="showpop('/modules/article/addbookcase.php?id=35149&amp;cid=18831130&amp;ajax_request=1');" style="">加入书签</a>
+                </div>
+            </div>
+
+            <div id="detcontent" style="" th:utext="${data.data.chapter.content}" >&nbsp;&nbsp;&nbsp;&nbsp;雨，倾盆的下着。一位穿着黑色长袖的少年，那漆黑深邃的眼眸犹如深潭般不可猜测，似乎在说着他的不平凡。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;然而此刻这位名叫厉凡的少年却神色紧张的护着怀里的东西，宝贝的不得了的样子，走进一看，就会发现，其实就是简单几个包子加一瓶牛奶罢了。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;只不过还显着热气而已，少年还在朝着前方极速跑着，在那前方，在那大雨朦胧之下，一所叫做希望中学的学校映入眼帘。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;没过多久，厉凡便冲进了校园之中，朝着0的教室跑去，浑然不知自身已经湿透，除了紧紧护在胸口的早餐……<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;到了教室门口，一道靓丽的风景布满了厉凡的双眼，微微及腰的紫色长发，萌萌的大眼睛在说着话似的，显得可爱非凡，初具规模的胸脯显得朝气蓬勃。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;她，叶灵儿，是他厉凡心里的全部，就如小时候的他在一个寒冷的冬天里保护着她……<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;厉凡把还带着热气的早餐放在了叶灵儿的书桌上，就如以往的一样，那三年的一如既往。接着厉凡就走到了教室的最后面，那属于他的位置，坐了下去。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;而叶灵儿则随意的拿起了包子，可爱的眉头皱了皱，然后轻轻咬了下去，显得非常卡哇伊，吸引的班里一群男生直盯着看，厉凡在后面则一直盯着叶灵儿的美丽背影傻笑，她，即是他的全宇宙……<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;这时候一道不和谐的声音响了起来，“哼，不就是长得可爱漂亮吗，有什么大不了的，现在可是钱的时代，有道是有钱能使鬼推磨呢。”一个肥嘟嘟的女生说到，还从书包里掏了一叠钱摔在桌子上，那亮闪闪的毛爷爷起码有个五六千的样子，把一众男生吸引了过来，当然，除了厉凡。这名叫做周洁的女生看到这一幕得意洋洋起来，不过当看到厉凡的时候，仿佛被嘲笑了一般接着道“也不照照镜子看看自己什么样，要钱没钱要家势没家势的穷丝，还想做癞蛤蟆想吃天鹅肉的美梦呢，难道你不知道叶灵儿早有喜欢的人了！哦，我咋忘了你是个没爹养，没娘疼的人呢，哈哈，还想靠着坚持追叶灵儿，痴心妄想。”<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;“就是，就是，要钱没钱的，在这个社会就别想着这么好的美梦了，哈哈，难道跟你一起喝西北风！”身材瘦小，皮肤黝黑黝黑的方浩咧着一口黄牙讥笑着。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;接着班里就是一群哈哈的嘲讽声音，作为这其中的主人厉凡则神色平静，仿佛他们说的不是他一般，毕竟被狗咬了难道还回去？只是浪费口水罢了。况且这种嘲笑声，不知道听过了多少，比这更严重的不知凡几。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;只不过有一位却显得格外与众不同，那鼓鼓的腮帮子，粉红粉红的脸颊，背后的马尾俏皮的一甩一甩的，显得有些气急，赵雪正想理论一番，当看到当事人厉凡那无所谓的样子，准备出口的话语又憋了进去，只留下哼哼两声，然后脑袋一甩，生闷气去了。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;时间飞逝，眨眼间就到了下午，可是外面的雨却尽职的下着，厉凡扫了一下教室，然后拍了一下自己的脑袋，自己居然忘了带雨伞，等会难道要叶灵儿跟自己淋雨？<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;正当厉凡苦恼的时候，从隔壁0走来一位翩翩少年，那一身衣着，加上手上带着的一枚镶钻戒指，显得神气十足，“哇，是韩少啊，果然是仪表堂堂，英俊潇洒啊，看他走来方向，难道是特意为我而来……”<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;在叶灵儿的前方，一名长着瓜子脸，眼带星星的花痴女无脑的说到，虽然这名叫做程月菲的花痴女确实长得挺漂亮，有些小家碧玉之感，但这位韩少却并为在她面前停留，而是竞足来到了叶灵儿面前停了下来。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;接着温柔的说到“灵儿，外面下大雨，我送你回去吧。”叶灵儿红着脸娇羞的点点头，喃喃道“不是说要保持秘密吗，你怎么今天这么大胆啊。”韩少笑了笑，直接牵起了叶灵儿的柔软无骨似的小手，假装痴情的说着“我要不这么大胆，我怕你被人抢走了啊，你可是我的小心肝。”<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;叶灵儿以为韩少因为厉凡每天送早餐的事生气，忙说到“我心里早就全是你的影子了，厉凡跟我没什么的，是他自作多情。”接着急忙对厉凡说“以后别给我送早餐了，听到没有，我只喜欢韩少。”<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;厉凡依然显得那么平静，“我知道了，祝你幸福！”<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;“我还以为你有多爱叶大校花呢，原来是假的啊，呵呵，装的还真像，每天送早餐啊什么的，现在原型毕露了吧。”周洁开始拉起了仇恨。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;而叶灵儿听到了周洁的话，好看的眉头也皱了起来，露出了厌恶之感，而这都被厉凡所看到了，即使叶灵儿做的很小心，但在厉凡这里，无异与放大镜。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;嘴角微起一抹自嘲，厉凡什么话也没说，低着头，蹒跚学步似的龟速向大门走去，而这错过两道目光，一道是显得恶意，骄傲的，显然是韩少的，另一道却显得担忧，关心的，是赵雪的。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;这一切，厉凡都没发现，此刻他的心如同万剑穿心般的痛，一股死灰之气弥漫脸上，双手直流着喷涌的鲜血，原来是指甲深深刺进了肉里，在大雨的冲刷下依然留着，显然就知道那有多深，多痛。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;爱情，是卑微的，你爱的那个人就是凤凰，而你就是飞蛾扑火的蛾，就算明知道结局，却一如既往，哪怕是万劫不复……最可悲的是，即使这样，那凤凰也不会因此动容，因为你不是她所在乎的，这就是爱与被爱，很现实，也很残忍。<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;厉凡就这样，缓缓的前行着，像行尸走肉般，不知归途在哪里，他想起了自己小时候与叶灵儿在雪地里拥抱取暖，他保护叶灵儿被打的鼻青脸肿，他还想起了那个他们之间的约定凡，你以后一直保护我吗，我们能不能一直在一起啊。那时候的她那么天真那么的迷人……<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;岁月，真的能改变一个人，磨平一个人的意志吗？如果一直都是小时候，该多好啊。好怀念，好怀念……<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;人生若只如初见！<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;fanzhidi00<br>
+                <br>
+                &nbsp;&nbsp;&nbsp;&nbsp;。</div>
+            <div class="bottem2" style="">
+                <a href="javascript:void(0);" onclick="report('凡之帝');" class="red errorlink" target="_blank" style="">章节错误？点此举报</a>
+                <a href="javascript:;" onclick="showpop('/modules/article/uservote.php?id=35149&amp;ajax_request=1');" style="">投推荐票</a> <a href="/35_35149/" style="">上一章</a> ← <a href="http://www.qbiqu.com/35_35149/" style="">章节目录</a> → <a href="/35_35149/18831131.html" style="">下一章</a> <a href="javascript:;" onclick="showpop('/modules/article/addbookcase.php?id=35149&amp;cid=18831130&amp;ajax_request=1');" style="">加入书签</a>
+            </div>
+            <div id="hm_t_20123" style=""></div>
+        </div>
+    </div>
+
+
+
+</div>
+<!--  width:auto; / width:XX%; -->
+<script src="/src/js/vue.js"></script>
+
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script src="/src/js/jquery-2.1.4.min.js"></script>
+
+<script th:inline="javascript" >
+    var resultData = [[${data}]];
+</script>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData: [
+                    {
+                        id: '1',
+                        ranking: "",
+                        name: '牧神记',
+                        author: '宅猪',
+                        introduction: '',
+                        type: ''
+                    }
+                ],
+                restaurants: [],
+                state: '',
+                timeout: null,
+                // 搜索框和推荐列表是否显示
+                mainShow: true,
+                //是否点过搜索按钮
+                searchFlag: false,
+                // 详情页是否展示
+                detailShow: false,
+                detailContet: "",
+                ChapterName: ""
+            }
+
+        },
+        methods: {}
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>渣书网</title>
+    <link rel="icon" href="/src/static/icon/timg.jpg" type="image/x-icon"/>
+</head>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+<style>
+    form {
+        position: relative;
+        width: 18.75rem;
+        margin: 0 auto;
+    }
+
+    input,
+    button {
+        border: none;
+        outline: none;
+        position: relative;
+    }
+
+    input {
+        width: 100%;
+        height: 2.625rem;
+        padding-left: 0.8125rem;
+    }
+
+    /*搜索框7*/
+
+    .bar7 form {
+        height: 2.625rem;
+
+        /*绝对定位*/
+    }
+
+    .bar7 input {
+        border-radius: 2.625rem;
+        border: 0.125rem solid #324B4E;
+        background: #F9F0DA;
+        transition: .3s linear;
+        float: right;
+    }
+
+    .bar7 input:focus {
+        width: 18.75rem;
+    }
+
+    .bar7 button {
+        height: 2.625rem;
+        width: 2.625rem;
+        cursor: pointer;
+        position: absolute;
+        background: none;
+        /*top: -0.125rem;*/
+        right: 1.25rem;
+        top: 2px;
+    }
+
+    .bar7 button:before {
+        content: "GO";
+        font-family: FontAwesome;
+        color: #324B4E;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+
+    }
+
+    #app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-image: url(/src/static/bg-img/bg2_gaitubao_.jpg);
+        overflow: hidden;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 4% 0;
+
+    }
+
+    #context {
+        width: 60%;
+        height: 100%;
+        border: 2px solid black;
+        overflow-y:scroll;
+    }
+
+    #detailDiv {
+
+        background:#FFF5EE;
+    }
+
+    #top {
+        width: 80%;
+        height: 8%;
+        /*border: 1px solid black;*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    #under {
+        width: 85%;
+        height: 85%;
+        overflow: auto;
+        opacity: 0.7;
+    }
+
+    .el-table td, .el-table th.is-leaf {
+        border-bottom: 2px solid #EBEEF5;
+
+    }
+
+
+</style>
+
+<body>
+<div id="app">
+    <div id="top">
+        <div id="serch" v-show="mainShow">
+            <div class="search bar7" style="width:100%;text-align:center">
+                <form action="/book/start" method="post">
+                    <input type="text" placeholder="请输入书名/作者" name="bookName" id="bookName">
+                    <button type="submit" id="searchBtn"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="under" v-show="mainShow">
+        <div id="left"></div>
+
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="简介">
+                            <span>{{ props.row.introduction }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column label="排名" prop="ranking">
+            </el-table-column>
+            <el-table-column label="名称" prop="name">
+                <template slot-scope="scope">
+                    <a @click="ceshi(scope.row.id)" style="cursor:pointer;text-decoration:none;" >{{scope.row.name}}</a>
+                </template>
+            </el-table-column>
+            <el-table-column label="作者" prop="author">
+            </el-table-column>
+<!--            <el-table-column label="状态" prop="type" :formatter="formatter">
+            </el-table-column>-->
+        </el-table>
+        <div id="right"></div>
+    </div>
+    <!--<div id="context" v-show="detailShow">-->
+        <!--<h1>{{ChapterName}}</h1>-->
+        <!--<br/>-->
+        <!--<div id="detailDiv" v-html="detailContet">-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+<!--  width:auto; / width:XX%; -->
+<script src="/src/js/vue.js"></script>
+
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+<script src="/src/js/jquery-2.1.4.min.js"></script>
+<script src="/src/js/layer/layer.js"></script>
+
+<script type="text/javascript">
+
+    var vm = new Vue({
+        el: '#app',
+        data() {
+            return {
+                tableData: [
+
+                ],
+                restaurants: [],
+                state: '',
+                timeout: null,
+                // 搜索框和推荐列表是否显示
+                mainShow: true,
+                //是否点过搜索按钮
+                searchFlag: false,
+                // 详情页是否展示
+                detailShow: false,
+                detailContet: "",
+                ChapterName: ""
+            }
+
+        },
+        beforeCreate() {
+            vm = this;
+        },
+        created() {
+            $.ajax({
+                url: "/book/recommend",
+                method: "GET",
+                data: {},
+                dataType: "json",
+                success: function (res) {
+                    if (res != null && res.code == 200) {
+                         vm.tableData = res.data;
+                        // vm.tableData.length = 0;
+                        //   for (var i = 0; i < res.data.length; i++) {
+                        //       var book = res.data[i];
+                        //      vm.tableData.push({
+                        //           id: book.id,
+                        //           name: book.name,
+                        //           author: book.author,
+                        //           introduction:book.introduction
+                        //       })
+                        //   }
+                    }
+                }
+            })
+
+        },
+        methods: {
+            formatter(row, column) {
+                if (row.type == '0') {
+                    return '连载';
+                } else if (row.type == '1') {
+                    return '完结';
+                }
+            },
+            ceshi: function (id) {
+                window.open("/chapter/list?bookId=" + id )
+            }
+        }
+    });
+
+    function getDetail(bookId) {
+        $.ajax({
+            url: "/chapter/detail",
+            method: "GET",
+            data: {"bookId": bookId},
+            dataType: "json",
+            success: function (res) {
+                if (res != null && res.code == 200) {
+                    vm.mainShow = false;
+                    vm.detailContet = res.data.content;
+                    vm.ChapterName = res.data.name;
+                    vm.detailShow = true;
+                } else if (res != null && res.code == 202) {
+                    alert("未找到数据");
+                    vm.searchFlag = false;
+                    vm.mainShow = true;
+                }
+            }
+        });
+    }
+
+
+</script>
+
+<script th:inline="javascript" >
+    var resultData = [[${data}]];
+</script>
+<script>
+    $(function () {
+        if (resultData == null || resultData == undefined) {
+        }else {
+            console.info(resultData);
+            layer.alert('未找到该资源', {
+                skin: 'layui-layer-molv' //样式类名
+                ,closeBtn: 0
+            });
+        }
+    })
+</script>
+</body>
+
+</html>

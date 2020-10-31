@@ -1,0 +1,80 @@
+package com.web.mundo.vo;
+
+import com.web.mundo.config.RequestMenthodEnum;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Request {
+
+    public Request() {
+    }
+
+    public Request(String url) {
+        this.url = url;
+    }
+
+    /**
+     * 下载链接url
+     */
+    private String url;
+    /**
+     * 请求方式
+     */
+    private RequestMenthodEnum requestMenthod = RequestMenthodEnum.GET;
+    /**
+     *  下载的字符编码
+     */
+    private String charSet;
+
+    /**
+     * 可以存储任何数据信息
+     */
+    private Map<String,Object> dateMap = new HashMap<>();
+
+    /**
+     * 若是post请求，存储请求参数
+     */
+    private Map<String,String> params;
+
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public RequestMenthodEnum getRequestMenthod() {
+        return requestMenthod;
+    }
+
+    public void setRequestMenthod(RequestMenthodEnum requestMenthod) {
+        this.requestMenthod = requestMenthod;
+    }
+
+    public String getCharSet() {
+        return charSet;
+    }
+
+    public void setCharSet(String charSet) {
+        this.charSet = charSet;
+    }
+
+    public Object getDateMap(String key) {
+        return dateMap.get(key);
+    }
+
+    public void putDateMap(String key , Object val) {
+        dateMap.put(key, val);
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
+}
