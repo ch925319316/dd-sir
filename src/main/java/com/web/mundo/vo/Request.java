@@ -36,9 +36,27 @@ public class Request {
      * 若是post请求，存储请求参数
      */
     private Map<String,String> params;
+    
+    
+    private Map<String,String> heards = new HashMap<String, String>();
+    
+    public Map<String, Object> getDateMap() {
+		return dateMap;
+	}
 
+	public void setDateMap(Map<String, Object> dateMap) {
+		this.dateMap = dateMap;
+	}
 
-    public String getUrl() {
+	public Map<String, String> getHeards() {
+		return heards;
+	}
+
+	public void setHeards(Map<String, String> heards) {
+		this.heards = heards;
+	}
+
+	public String getUrl() {
         return url;
     }
 

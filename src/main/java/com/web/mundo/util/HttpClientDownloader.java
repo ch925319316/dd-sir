@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 下载器工具类
@@ -98,7 +99,6 @@ public class HttpClientDownloader {
     }
 
 
-
     private static HttpUriRequest buildRequest(Request req){
         RequestBuilder requestBuilder = null;
         switch (req.getRequestMenthod()) {
@@ -106,6 +106,8 @@ public class HttpClientDownloader {
                 requestBuilder =  RequestBuilder.get(req.getUrl());
                 break;
             case POST:
+            	RequestBuilder.post(req.getUrl());
+//            	.setEntity(entity);
                 break;
             default:
                 break;
@@ -119,7 +121,16 @@ public class HttpClientDownloader {
             LOGGER.info("未开启代理,url:{}",req.getUrl());
         }
         RequestConfig config = builder.build();
-        return   requestBuilder.setConfig(config).addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36").build();
+        Map<String, String> heards = req.getHeards();
+        if (heards!=null && (!heards.isEmpty())) {
+        	for (String headKey : heards.keySet()) {
+        		requestBuilder.addHeader(headKey,heards.get(headKey));
+			}
+        }else {
+        	requestBuilder.addHeader("User-Agent",
+        			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
+        }
+        return   requestBuilder.setConfig(config).build();
     }
 
 }

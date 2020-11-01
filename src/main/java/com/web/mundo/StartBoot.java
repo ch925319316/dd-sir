@@ -13,7 +13,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.web.mundo.dao")
+@MapperScan(basePackages = {"com.web.mundo.dao","com.web.mundo.sir.dao"})
 public class StartBoot {
 
     public static void main(String[] args) {
