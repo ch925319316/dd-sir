@@ -28,12 +28,12 @@ public class SirVideo {
 	private String like;
 	private String price;
 	private String isSaved;
+	private String img_oss;
 	private String badges;
 	private String mv_type;
 	private String good;
 	private String vote_like;
 	private String vote_dislike;
-	private String mv_share;
 	private String mv_url;
 	private String is_down;
 	private String oss;
@@ -207,12 +207,7 @@ public class SirVideo {
 	public void setVote_dislike(String vote_dislike) {
 		this.vote_dislike = vote_dislike;
 	}
-	public String getMv_share() {
-		return mv_share;
-	}
-	public void setMv_share(String mv_share) {
-		this.mv_share = mv_share;
-	}
+
 	public String getMv_url() {
 		return mv_url;
 	}
@@ -243,8 +238,51 @@ public class SirVideo {
 	public void setUpdate_time(Date update_time) {
 		this.update_time = update_time;
 	}
-	
-	
-	
 
+	public String getImg_oss() {
+		return img_oss;
+	}
+
+	public void setImg_oss(String img_oss) {
+		this.img_oss = img_oss;
+	}
+
+	@Override
+	public String toString() {
+		return "SirVideo{" +
+				"id='" + id + '\'' +
+				", _id='" + _id + '\'' +
+				", title='" + title + '\'' +
+				", duration='" + duration + '\'' +
+				", cover_thumb='" + cover_thumb + '\'' +
+				", cover_full='" + cover_full + '\'' +
+				", directors='" + directors + '\'' +
+				", publisher='" + publisher + '\'' +
+				", actors='" + actors + '\'' +
+				", category='" + category + '\'' +
+				", tags='" + tags + '\'' +
+				", via='" + via + '\'' +
+				", is_deleted='" + is_deleted + '\'' +
+				", desc='" + desc + '\'' +
+				", onshelf_tm='" + onshelf_tm + '\'' +
+				", rating='" + rating + '\'' +
+				", created_at='" + created_at + '\'' +
+				", refresh_at='" + refresh_at + '\'' +
+				", isfree='" + isfree + '\'' +
+				", dislike='" + dislike + '\'' +
+				", like='" + like + '\'' +
+				", price='" + price + '\'' +
+				", isSaved='" + isSaved + '\'' +
+				", badges='" + badges + '\'' +
+				", mv_type='" + mv_type + '\'' +
+				", good='" + good + '\'' +
+				", vote_like='" + vote_like + '\'' +
+				", vote_dislike='" + vote_dislike + '\'' +
+				", mv_url='" + mv_url + '\'' +
+				", is_down='" + is_down + '\'' +
+				", oss='" + oss + '\'' +
+				", create_time=" + create_time +
+				", update_time=" + update_time +
+				'}';
+	}
 }

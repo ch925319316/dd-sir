@@ -25,6 +25,8 @@ public class EncryptManager {
     private boolean isDebug = false;
     private byte[][] key_iv;
     private SecretKeySpec skeySpec;
+    private static String p1 = "74029765cfeaf8dd791322dfd24691b4";
+    private static String p2 = "0d27dfacef1338483561a46b246bf36d";
 
     private EncryptManager() {
         try {
@@ -43,6 +45,7 @@ public class EncryptManager {
             synchronized (EncryptManager.class) {
                 if (instance == null) {
                     instance = new EncryptManager();
+                    instance.init(p1, p2);
                 }
             }
         }
@@ -131,7 +134,7 @@ public class EncryptManager {
         return jSONObject.toString();
     }
 
-    public String getReusltJson(String str) throws JSONException {
+    public String getReusltJson(String str) {
         JSONObject jSONObject = new JSONObject(str);
         if (jSONObject == null) {
             return null;

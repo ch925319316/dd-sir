@@ -35,7 +35,11 @@ public class Request {
     /**
      * 若是post请求，存储请求参数
      */
-    private Map<String,String> params;
+    private Map<String,String> postParams;
+
+    private String postData;
+
+    private boolean noUseProxy = false;
     
     
     private Map<String,String> heards = new HashMap<String, String>();
@@ -88,11 +92,27 @@ public class Request {
         dateMap.put(key, val);
     }
 
-    public Map<String, String> getParams() {
-        return params;
+    public Map<String, String> getPostParams() {
+        return postParams;
     }
 
-    public void setParams(Map<String, String> params) {
-        this.params = params;
+    public void setPostParams(Map<String, String> postParams) {
+        this.postParams = postParams;
+    }
+
+    public String getPostData() {
+        return postData;
+    }
+
+    public void setPostData(String postData) {
+        this.postData = postData;
+    }
+
+    public boolean isNoUseProxy() {
+        return noUseProxy;
+    }
+
+    public void setNoUseProxy(boolean noUseProxy) {
+        this.noUseProxy = noUseProxy;
     }
 }

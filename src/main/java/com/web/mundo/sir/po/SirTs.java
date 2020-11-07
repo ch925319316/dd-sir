@@ -8,6 +8,7 @@ public class SirTs {
 	private String oss;
 	private String count;
 	private Date create_time;
+	private Date update_time;
 	private String url;
 	private String is_down;
 	public long getId() {
@@ -52,7 +53,12 @@ public class SirTs {
 	public void setIs_down(String is_down) {
 		this.is_down = is_down;
 	}
-	
-	
 
+	public Date getUpdate_time() {
+		return update_time;
+	}
+
+	public void setUpdate_time(Date update_time) {
+		this.update_time = update_time;
+	}
 }

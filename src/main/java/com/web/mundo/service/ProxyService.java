@@ -65,6 +65,7 @@ public class ProxyService {
    @Scheduled(fixedDelay = 30000)
     private void taskUpdateProxy(){
         Request request = new Request(PROXY_URL);
+       request.setNoUseProxy(true);
         Page page = HttpClientDownloader.download(request);
         if (page != null && StringUtils.isNotBlank(page.getRawText())) {
             String iplist = page.getRawText();
