@@ -32,6 +32,11 @@ public class SirWorker {
     @Autowired
     ISirDao sirDao;
 
+    /**
+     * 根据 vid 的 mv_url。
+     * @param vid
+     * @param oauth_id
+     */
     public void saveTsById(String vid, String oauth_id) {
         SirVideo video = sirDao.findVideo(vid);
         if (video != null && ("1".equals(video.getIs_down()) || "2".equals(video.getIs_down()))) {
@@ -47,6 +52,7 @@ public class SirWorker {
         if (download == null) {
             logger.info("下载失败,vid:{}", vid);
             video.setIs_down("3");
+            return;
         }
         video.setIs_down("4");
         video.setUpdate_time(new Date());
