@@ -244,7 +244,7 @@ public class MundoApplicationTests {
 
     @Test
     public void downSirVideo() {
-        sirWorker.startFeed(10000);
+        sirWorker.startFeed(10000, "84b124q0a79166bc");
     }
 
 

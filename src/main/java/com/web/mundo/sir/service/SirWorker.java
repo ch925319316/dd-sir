@@ -9,8 +9,8 @@ import com.web.mundo.sir.po.SirTs;
 import com.web.mundo.sir.po.SirVideo;
 import com.web.mundo.util.HttpClientDownloader;
 import com.web.mundo.util.JsonPathUtils;
+import com.web.mundo.util.StringUtils;
 import com.web.mundo.vo.Page;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,99 @@ import com.web.mundo.vo.Request;
 
 @Service
 public class SirWorker {
-	
+
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static Gson gson = new Gson();
-    
+
     public static EncryptManager encryptManager  = EncryptManager.getInstance();
+
+    public static String AUTHOR = StringUtils.getStringRandom(16);
+
+    public static final List<String> VQUEUE = new ArrayList<>();
+    public static final List<String> VID_TS = new ArrayList<>();
+    public static final Map<String, String> VTS = new HashMap<>();
+    private static final String SPLITE_SYMBOL = "@@";
 
     @Autowired
     ISirDao sirDao;
+
+
+    public void checkQueue() {
+        if (VQUEUE.size() < 3) {
+            SirVideo videoToDown = sirDao.findVideoToDown();
+            if (videoToDown != null) {
+                VQUEUE.add(videoToDown.getId());
+            }
+        }
+        for (String vid : VQUEUE) {
+            SirVideo video = sirDao.findVideo(vid);
+            if (video == null) {
+                continue;
+            }
+            checkTs(video);
+        }
+
+    }
+
+
+    public void downTs() {
+        while (true) {
+            try {
+                if (VID_TS.isEmpty()) {
+                    Thread.sleep(30000);
+                    continue;
+                }
+                String vidTs = VID_TS.get(0);
+                String tsUrl = VTS.get(vidTs);
+                String[] split = vidTs.split(SPLITE_SYMBOL);
+                String tsiId = split[0];
+                String tsCount = split[1];
+                // 先查询ts的有效期 和 是否已下载
+
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+    private void checkTs(SirVideo video){
+        List<SirTs> tsList = sirDao.findTsList(video.getId());
+        if (tsList == null || tsList.isEmpty()) {
+            saveTsById(video.getId(), AUTHOR);
+            return;
+        }
+        for (SirTs sirTs : tsList) {
+            String tsUrl = sirTs.getUrl();
+            String valueTime = StringUtils.getPretten(tsUrl, "?auth_key=([0-9]{10})-");
+            if (org.apache.commons.lang3.StringUtils.isBlank(valueTime)) {
+                logger.error("ts 有效时间匹配失败，url:{}", tsUrl);
+                continue;
+            }
+            if ((Long.parseLong(valueTime) * 1000 - 180000) < System.currentTimeMillis()) {
+                // 失效了
+                saveTsById(video.getId(), AUTHOR);
+                return;
+            }
+            String tsKey = sirTs.getId() + SPLITE_SYMBOL + sirTs.getCount();
+            if (!VID_TS.contains(tsKey)) {
+                VID_TS.add(tsKey);
+            }
+            VTS.put(tsKey, sirTs.getUrl());
+        }
+    }
+
+
+
+
+
 
     /**
      * 根据 vid 的 mv_url。
@@ -92,6 +177,7 @@ public class SirWorker {
                 sirDao.saveTs(sirTs);
             }
         }
+        logger.info("save ts success,vid:{}", vid);
     }
 
 
@@ -125,7 +211,7 @@ public class SirWorker {
             request.setPostData(data);
             request.setHeards(heards);
             Page download = HttpClientDownloader.download(request);
-            if (download == null || StringUtils.isEmpty(download.getRawText())) {
+            if (download == null || org.apache.commons.lang3.StringUtils.isEmpty(download.getRawText())) {
                 logger.info("下载失败,vid:{}", vid);
                 continue;
             }
@@ -145,7 +231,7 @@ public class SirWorker {
             // 获取mv_url
             String videoUrl = JsonPathUtils.readString(lists.get(0), "$.line.s720");
             sirVideo.setMv_url(videoUrl);
-            if (StringUtils.isEmpty(videoUrl)) {
+            if (org.apache.commons.lang3.StringUtils.isEmpty(videoUrl)) {
                 sirVideo.setIs_down("9");
             }
             if (video == null) {
@@ -161,8 +247,8 @@ public class SirWorker {
     }
 
 
-    public void startFeed(int pageCount) {
-        String oauth_id = "84b124q0a79166bc";
+    public void startFeed(int pageCount,String oauth_id) {
+//        String oauth_id = "84b124q0a79166bc";
         for (int count = 1; count < pageCount; count++) {
             String param = "{\"page\":" + count + ",\"mod\":\"av\",\"code\":\"search\",\"tag\":\"new\"," +
                     "\"oauth_id\":\"" + oauth_id + "\",\"oauth_type\":\"android_rn\"," +
@@ -185,7 +271,7 @@ public class SirWorker {
             request.setPostData(data);
             request.setHeards(heards);
             Page download = HttpClientDownloader.download(request);
-            if (download == null || StringUtils.isEmpty(download.getRawText())) {
+            if (download == null || org.apache.commons.lang3.StringUtils.isEmpty(download.getRawText())) {
                 count--;
                 logger.info("下载失败,count:{}", count);
                 continue;
@@ -235,7 +321,7 @@ public class SirWorker {
         String title = JsonPathUtils.readString(json, "$.title");
         String duration = JsonPathUtils.readString(json, "$.duration");
         String cover_full = JsonPathUtils.readString(json, "$.cover_full");
-        if (StringUtils.isNotBlank(cover_full)) {
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(cover_full)) {
             cover_full = cover_full.replaceFirst("(http.+?//.+?)(/.+)", "https://new_img.ycomesc.com$2");
         }
         String actors = JsonPathUtils.readString(json, "$.actors");
@@ -243,7 +329,7 @@ public class SirWorker {
         String price = JsonPathUtils.readString(json, "$.price");
         String badges = JsonPathUtils.readString(json, "$.badges");
 
-        if (StringUtils.isBlank(_id)) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(_id)) {
             return null;
         }
 
@@ -276,7 +362,7 @@ public class SirWorker {
         String title = JsonPathUtils.readString(json, "$.title");
         String duration = JsonPathUtils.readString(json, "$.duration");
         String cover_full = JsonPathUtils.readString(json, "$.cover_full");
-        if (StringUtils.isNotBlank(cover_full)) {
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(cover_full)) {
             cover_full = cover_full.replaceFirst("(http.+?//.+?)(/.+)", "https://new_img.ycomesc.com$2");
         }
         String actors = JsonPathUtils.readString(json, "$.actors");
@@ -284,7 +370,7 @@ public class SirWorker {
         String price = JsonPathUtils.readString(json, "$.price");
         String badges = JsonPathUtils.readString(json, "$.badges");
 
-        if (StringUtils.isBlank(_id)) {
+        if (org.apache.commons.lang3.StringUtils.isBlank(_id)) {
             return null;
         }
 
