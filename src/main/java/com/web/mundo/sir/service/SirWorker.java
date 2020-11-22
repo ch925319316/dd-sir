@@ -1,25 +1,26 @@
 package com.web.mundo.sir.service;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.google.gson.Gson;
+import com.web.mundo.config.RequestMenthodEnum;
 import com.web.mundo.sir.dao.ISirDao;
 import com.web.mundo.sir.po.SirTs;
 import com.web.mundo.sir.po.SirVideo;
+import com.web.mundo.sir.util.EncryptManager;
 import com.web.mundo.util.HttpClientDownloader;
 import com.web.mundo.util.JsonPathUtils;
 import com.web.mundo.util.StringUtils;
 import com.web.mundo.vo.Page;
+import com.web.mundo.vo.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.web.mundo.config.RequestMenthodEnum;
-import com.web.mundo.sir.util.EncryptManager;
-import com.web.mundo.vo.Request;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SirWorker {
@@ -31,98 +32,111 @@ public class SirWorker {
 
     public static String AUTHOR = StringUtils.getStringRandom(16);
 
-    public static final List<String> VQUEUE = new ArrayList<>();
-    public static final List<String> VID_TS = new ArrayList<>();
-    public static final Map<String, String> VTS = new HashMap<>();
-    private static final String SPLITE_SYMBOL = "@@";
+    private static final String OSS_PATH = "D:\\test\\sir\\ts\\";
 
     @Autowired
     ISirDao sirDao;
 
 
-    public void checkQueue() {
-        if (VQUEUE.size() < 3) {
-            SirVideo videoToDown = sirDao.findVideoToDown();
-            if (videoToDown != null) {
-                VQUEUE.add(videoToDown.getId());
-            }
-        }
-        for (String vid : VQUEUE) {
-            SirVideo video = sirDao.findVideo(vid);
-            if (video == null) {
-                continue;
-            }
-            checkTs(video);
-        }
+
+    public void start() {
+
 
     }
 
 
-    public void downTs() {
-        while (true) {
-            try {
-                if (VID_TS.isEmpty()) {
-                    Thread.sleep(30000);
-                    continue;
-                }
-                String vidTs = VID_TS.get(0);
-                String tsUrl = VTS.get(vidTs);
-                String[] split = vidTs.split(SPLITE_SYMBOL);
-                String tsiId = split[0];
-                String tsCount = split[1];
-                // 先查询ts的有效期 和 是否已下载
-
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+    public boolean start(String vid) {
+        startDetailById(vid,AUTHOR);
+        SirVideo video = sirDao.findVideo(vid);
+        if (video == null) {
+            logger.info("vid 不存在，{}", vid);
+            return false;
         }
+        if ("1".equals(video.getIs_down())) {
+            logger.info("vid 已下载，{}", vid);
+            return true;
+        }
+
+        checkTs(video);
+        return true;
     }
-
-
-
-
-
 
 
     private void checkTs(SirVideo video){
+        saveTsById(video.getId());
         List<SirTs> tsList = sirDao.findTsList(video.getId());
         if (tsList == null || tsList.isEmpty()) {
-            saveTsById(video.getId(), AUTHOR);
             return;
         }
         for (SirTs sirTs : tsList) {
-            String tsUrl = sirTs.getUrl();
-            String valueTime = StringUtils.getPretten(tsUrl, "?auth_key=([0-9]{10})-");
-            if (org.apache.commons.lang3.StringUtils.isBlank(valueTime)) {
-                logger.error("ts 有效时间匹配失败，url:{}", tsUrl);
-                continue;
-            }
-            if ((Long.parseLong(valueTime) * 1000 - 180000) < System.currentTimeMillis()) {
-                // 失效了
-                saveTsById(video.getId(), AUTHOR);
-                return;
-            }
-            String tsKey = sirTs.getId() + SPLITE_SYMBOL + sirTs.getCount();
-            if (!VID_TS.contains(tsKey)) {
-                VID_TS.add(tsKey);
-            }
-            VTS.put(tsKey, sirTs.getUrl());
+            downTs(sirTs);
         }
     }
 
 
+    private void downTs(SirTs sirTs) {
+        String tsUrl = sirTs.getUrl();
+        String valueTime = StringUtils.getPretten(tsUrl, "\\?auth_key=([0-9]{10})-");
+        if (org.apache.commons.lang3.StringUtils.isBlank(valueTime)) {
+            logger.error("ts 有效时间匹配失败，url:{}", tsUrl);
+            return;
+        }
+        if ((Long.parseLong(valueTime) * 1000 - 180000) < System.currentTimeMillis()) {
+            // 失效了
+            logger.info("时间失效了,vid:{},url:{}", sirTs.getV_id(), sirTs.getUrl());
+            return;
+        }
+        sirTs.setIs_down("2");
+        sirTs.setUpdate_time(new Date());
+        sirDao.updateTs(sirTs);
+        try {
+            sirTs.setIs_down("3");
+            Request request = new Request(tsUrl);
+            Map<String, String> heards = new HashMap<>();
+            heards.put("User-Agent", "dd");
+            request.setHeards(heards);
+            for (int i = 0; i < 3; i++) {
+                Page page = HttpClientDownloader.download(request);
+                if (page != null && page.getResource() != null) {
+                    byte[] resource = page.getResource();
+                    String fileDirPath = OSS_PATH + sirTs.getV_id();
+                    File file = new File(fileDirPath);
+                    if (!file.exists()) {
+                        file.mkdir();
+                    }
+                    String oss = UUID.randomUUID().toString();
+                    String tsPath = fileDirPath + "\\" + oss;
+                    FileOutputStream fileOutputStream = null;
+                    try {
+                        fileOutputStream = new FileOutputStream(tsPath);
+                        fileOutputStream.write(resource);
+                        fileOutputStream.flush();
+                        logger.info("ts down ok ,tsId:{}", sirTs.getId());
+                        sirTs.setIs_down("1");
+                        sirTs.setOss(oss);
+                    } catch (Exception e) {
+                        logger.error("save ts  oss error", e);
+                    } finally {
+                        fileOutputStream.close();
+                    }
+                    break;
+                }
 
-
+            }
+        } catch (Exception e) {
+            logger.error("error", e);
+        }
+        sirTs.setUpdate_time(new Date());
+        sirDao.updateTs(sirTs);
+    }
 
 
     /**
      * 根据 vid 的 mv_url。
+     *
      * @param vid
-     * @param oauth_id
      */
-    public void saveTsById(String vid, String oauth_id) {
+    public void saveTsById(String vid) {
         SirVideo video = sirDao.findVideo(vid);
         if (video != null && ("1".equals(video.getIs_down()) || "2".equals(video.getIs_down()))) {
             logger.info("已存在下载，vid:{}", vid);
@@ -165,7 +179,7 @@ public class SirWorker {
             boolean flag = true;
             for (SirTs ts : tsList) {
                 if (String.valueOf(i).equals(ts.getCount())) {
-                    if ("0".equals(ts.getIs_down())) {
+                    if (!"1".equals(ts.getIs_down())) {
                         sirTs.setId(ts.getId());
                         sirDao.updateTs(sirTs);
                     }

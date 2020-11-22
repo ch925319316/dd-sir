@@ -54,7 +54,7 @@ public class MundoApplicationTests {
     @Autowired
     private IChapterDao chapterDao;
     @Test
-    public void contextLoads() throws IOException, InterruptedException {
+    public void contextLoads() {
 //        for (int i = 1; i < 1199; i++) {
 //            Request request = new Request("https://p.cnkamax.com/upload18files/d1a5825bc7712ea0a10092e29ffddbff/ts/SSNI-671-"+i+".ts");
 //            Page download = HttpClientDownloader.download(request);
@@ -260,7 +260,14 @@ public class MundoApplicationTests {
     public void saveTsById() {
         String vid = "24676";
         String oauth_id = "84b59f40a7916611";
-        sirWorker.saveTsById(vid, oauth_id);
+        sirWorker.saveTsById(vid);
+    }
+
+
+    @Test
+    public void testStart() {
+        String vid = "24676";
+        sirWorker.start(vid);
     }
 
 

@@ -36,6 +36,9 @@ public class SirDaoSqlProvider {
         if (StringUtils.isNotBlank(sirTs.getIs_down())) {
             sql = sql + " ,is_down = #{is_down}  ";
         }
+        if (StringUtils.isNotBlank(sirTs.getOss())) {
+            sql = sql + " ,oss = #{oss}  ";
+        }
         sql = sql + " where id = #{id} ";
         return sql;
     }
