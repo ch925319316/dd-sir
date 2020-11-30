@@ -9,8 +9,7 @@ public class SirDaoSqlProvider {
 
     public String updateVideo(SirVideo sirVideo){
         String sql = " update sir_video set  " +
-                "update_time = #{update_time} " +
-                ",created_at = #{created_at} ";
+                "update_time = #{update_time} ";
 
         // 抓取类型
         if (StringUtils.isNotBlank(sirVideo.getMv_url())) {
@@ -18,6 +17,10 @@ public class SirDaoSqlProvider {
         }
         if (StringUtils.isNotBlank(sirVideo.getGood())) {
             sql = sql + " ,good = #{good}  ";
+        }
+
+        if (StringUtils.isNotBlank(sirVideo.getCreated_at())) {
+            sql = sql +   " ,created_at = #{created_at} ";
         }
         if (StringUtils.isNotBlank(sirVideo.getIs_down())) {
             sql = sql + " ,is_down = #{is_down}  ";

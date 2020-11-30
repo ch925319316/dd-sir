@@ -150,14 +150,14 @@ public class HttpClientDownloader {
         }
         RequestConfig.Builder builder = RequestConfig.custom().setRedirectsEnabled(false).setConnectTimeout(6000).setConnectionRequestTimeout(6000).setSocketTimeout(6000);
         if (req.isNoUseProxy()) {
-            LOGGER.info("未开启代理,url:{}",req.getUrl());
+//            LOGGER.info("未开启代理,url:{}",req.getUrl());
         } else {
             ProxyVO proxy = getProxy(getHost(req.getUrl()), 1, 4);
             if (proxy != null) {
                 builder.setProxy(new HttpHost(proxy.getIp(), proxy.getPort()));
-                LOGGER.info("开启代理,ip:{},port:{},url:{}",proxy.getIp(),proxy.getPort(),req.getUrl());
+//                LOGGER.info("开启代理,ip:{},port:{},url:{}",proxy.getIp(),proxy.getPort(),req.getUrl());
             } else {
-                LOGGER.info("未开启代理,url:{}",req.getUrl());
+//                LOGGER.info("未开启代理,url:{}",req.getUrl());
             }
         }
 

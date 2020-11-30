@@ -1,7 +1,26 @@
 package com.web.mundo;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.documents4j.api.DocumentType;
+import com.documents4j.api.IConverter;
+import com.documents4j.job.LocalConverter;
 import com.google.gson.Gson;
-import com.jayway.jsonpath.JsonPath;
 import com.web.mundo.config.RequestMenthodEnum;
 import com.web.mundo.dao.IChapterDao;
 import com.web.mundo.po.Chapter;
@@ -16,24 +35,6 @@ import com.web.mundo.vo.Page;
 import com.web.mundo.vo.ProxyVO;
 import com.web.mundo.vo.Request;
 import com.web.mundo.worker.TestCrawler;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import com.documents4j.api.DocumentType;
-import com.documents4j.api.IConverter;
-import com.documents4j.job.LocalConverter;
 
 
 @RunWith(SpringRunner.class)
@@ -244,7 +245,7 @@ public class MundoApplicationTests {
 
     @Test
     public void downSirVideo() {
-        sirWorker.startFeed(10000, "84b124q0a79166bc");
+        sirWorker.startFeed(10000, "84b124q0a79122bc");
     }
 
 
@@ -269,6 +270,16 @@ public class MundoApplicationTests {
         String vid = "24676";
         sirWorker.start(vid);
     }
+    
+    @Test
+    public void testDownAll() {
+        List<SirVideo> videoToDown = sirDao.findVideoToDown();
+        for (SirVideo sirVideo : videoToDown) {
+            sirWorker.start(sirVideo.getId());
+		}
+
+    }
+    
 
 
 }

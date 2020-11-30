@@ -23,8 +23,8 @@ public interface ISirDao {
     void updateVideo(SirVideo sirVideo);
 
 
-    @Select(" select  *  from sir_video where is_down  NOT IN ('1','2') ORDER BY good DESC limit 1")
-    SirVideo findVideoToDown();
+    @Select(" select  *  from sir_video where is_down  NOT IN ('1') ORDER BY good DESC ")
+    List<SirVideo> findVideoToDown();
 
 
     @Insert(" insert into sir_ts ( v_id,create_time,update_time,oss,url,count  ) " +
